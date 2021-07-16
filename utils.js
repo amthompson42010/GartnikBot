@@ -5,6 +5,7 @@
  */
 
 const fs = require('fs');
+const { client } = require('tmi.js');
 
 let commandData = require('./commands.json');
 
@@ -17,47 +18,69 @@ let addCategory = null;
 
 class Utils {
 
-    handleCommands(tags, message) {
+    handleCommands(isMod, channel, tags, message) {
+        sendMessage = null;
         let convertedMessage = message.toLowerCase();
-        console.log(message.toLowerCase())
+        // console.log(message.toLowerCase())
+        let messageArr = convertedMessage.split(' ');
 
-        if(convertedMessage) {
+        let treat = this.commandExists(isMod);
+
+        if(convertedMessage && treat) {
 
             // Need to change this so this does not run all the time if a message is not even entered under 'helloCommand'
             helloCommands.forEach( (hComm) => {
                 if(hComm.commandName === convertedMessage)
                 {
                     sendMessage = hComm.response + tags.username + '!';
-                }
+                } 
             })
 
             socialCommands.forEach( (sComm) => {
                 if(sComm.commandName === convertedMessage)
                 {
                     sendMessage = sComm.response;
-                }
+                }            
             })
 
             adminCommands.forEach( (aComm) => {
-                let messageArr = convertedMessage.split(' ');
+                
                 console.log(messageArr);
-                if(aComm.commandName === messageArr[0])
+                console.log(isMod);
+                if(messageArr[0] === "!addcommand" && isMod)
                 {
-                    if(messageArr[0] === "!addcommand")
-                    {
-                        console.log(messageArr[0], messageArr[1], messageArr[2], messageArr[3]);
-                        this.addCommand(messageArr[1], messageArr[2], messageArr[3]);
-                    }
-                }
 
-                sendMessage = "test";
+                    const commandExists = this.commandExists(messageArr[1]);
+                    // console.log(messageArr[0], messageArr[1], messageArr[2], messageArr[3]);
+                    if(commandExists)
+                    {
+                        sendMessage = "Command already exists. Please enter a command that does not."
+                    }
+                    else {
+                        this.addTextCommand(messageArr[1], messageArr[2], messageArr[3]);
+                        sendMessage = "test";
+                    }
+                } else if(messageArr[0] === "!commands")
+                {
+                    let data = this.getAllCommands(isMod);
+                    console.log("data: ", data);
+                    sendMessage = data.join(' ');
+                }
             })
         }
 
         return sendMessage;
     }
 
-    addCommand(commandName, commandResponse, commandCategory) {
+    commandExists(command_name) {
+        let isH = command_name => command_name === helloCommands.commandName;
+        let isS = command_name => command_name === socialCommands.commandName;
+        let isA = command_name => command_name === adminCommands.commandName;
+        return isH || isS || isA
+    }
+
+    addTextCommand(commandName, commandResponse, commandCategory) {
+        console.log(commandName, commandResponse, commandCategory);
         
         switch(commandCategory) {
             case 'h':
@@ -79,7 +102,34 @@ class Utils {
         this.writeToJSONFile('./commands.json', JSON.stringify(commands));
     }
 
+    addOtherCommand() {
+
+    }
+
+    getAllCommands(isMod) {
+        let listOfCommands = [];
+        if(isMod) {
+            //whisper all commands
+            helloCommands.forEach((hComm) => {
+                listOfCommands.push(hComm.commandName);
+            });
+            socialCommands.forEach((sComm) => {
+                listOfCommands.push(sComm.commandName);
+            })
+        } else {
+            helloCommands.forEach((hComm) => {
+                listOfCommands.push(hComm.commandName);
+            });
+            socialCommands.forEach((sComm) => {
+                listOfCommands.push(sComm.commandName);
+            })
+        }
+
+        return listOfCommands;
+    }
+
     writeToJSONFile(file, content) {
+        console.log("hit")
         fs.writeFile(file, content, err => {
             if(err) {
                 console.error(err);

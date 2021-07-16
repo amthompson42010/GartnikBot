@@ -1,2 +1,4 @@
 config.json
+badwords.json
+commands.json
 node_modules

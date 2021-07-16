@@ -12,6 +12,7 @@ const channel = jsonData.channels;
 console.log(channel);
 
 let serviceHandler = new Utils();
+let isMod = false;
 
 const client = new tmi.Client({
     options: { debug: true },
@@ -24,14 +25,26 @@ const client = new tmi.Client({
 
 client.connect();
 
+client.on("chat", function (channel, user, message, self) {
+    // Username is a mod or username is the broadcaster..
+    if (user["user-type"] === "mod" || user.username === channel.replace("#", "")) {
+        // User is a mod.
+        isMod =  true;
+    }
+
+    return isMod;
+});
 
 client.on('message', (channel, tags, message, self) => {
     if(self) return;
 
     let convertedMessage = message.toLowerCase();
-    console.log(message.toLowerCase())
+    // console.log(message.toLowerCase())
 
-    let newMessage = serviceHandler.handleCommands(tags, convertedMessage);
-    client.say(channel, newMessage);
+    let newMessage = serviceHandler.handleCommands(isMod, channel, tags, convertedMessage);
+    if(newMessage !== null)
+    {
+        client.say(channel, newMessage);
+    }
 
 });
