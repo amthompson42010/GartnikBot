@@ -1,14 +1,17 @@
+/**
+ * Author: Alexander Mark Thompson
+ * License: MIT
+ * Description: Index application page
+ */
+
 const tmi = require('tmi.js');
 let jsonData = require('./config.json');
-let commandData = require('./commands.json');
+const { Utils } = require('./utils');
 
 const channel = jsonData.channels;
 console.log(channel);
 
-let commands = commandData;
-let helloCommands = commands.helloCommands;
-let socialCommands = commands.socialCommands;
-let sendMessage = null;
+let serviceHandler = new Utils();
 
 const client = new tmi.Client({
     options: { debug: true },
@@ -28,24 +31,7 @@ client.on('message', (channel, tags, message, self) => {
     let convertedMessage = message.toLowerCase();
     console.log(message.toLowerCase())
 
-    if(convertedMessage) {
-
-        // Need to change this so this does not run all the time if a message is not even entered under 'helloCommand'
-        helloCommands.forEach( (hComm) => {
-            if(hComm.commandName === convertedMessage)
-            {
-                sendMessage = hComm.response + tags.username + '!';
-                client.say(channel, sendMessage);
-            }
-        })
-
-        socialCommands.forEach( (sComm) => {
-            if(sComm.commandName === convertedMessage)
-            {
-                sendMessage = sComm.response;
-                client.say(channel, sendMessage);
-            }
-        })
-    }
+    let newMessage = serviceHandler.handleCommands(tags, convertedMessage);
+    client.say(channel, newMessage);
 
 });
