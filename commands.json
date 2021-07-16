@@ -1,0 +1,46 @@
+{
+    "helloCommands": [
+        {
+            "commandName": "hello",
+            "response": "Hello "
+        },
+        {
+            "commandName": "hi",
+            "response": "Hi "
+        },
+        {
+            "commandName": "good morning",
+            "response": "Good Morning "
+        },
+        {
+            "commandName": "good evening",
+            "response": "Good Evening "
+        }
+    ],
+    "socialCommands": [
+        {
+            "commandName": "!twitter",
+            "response": "https://twitter.com/GartnikF"
+        },
+        {
+            "commandName": "!youtube",
+            "response": "https://www.youtube.com/channel/UCCAkMS2U32q9DrYthAR5rjw"
+        },
+        {
+            "commandName": "!discord",
+            "response": "https://discord.com/invite/mjdBMN"
+        },
+        {
+            "commandName": "!insta",
+            "response": "https://www.instagram.com/gartnikflamestwitch/?hl=en"
+        },
+        {
+            "commandName": "!github",
+            "response": "https://github.com/amthompson42010"
+        },
+        {
+            "commandName": "!socials",
+            "response": "Twitter: https://twitter.com/GartnikF Youtube: https://www.youtube.com/channel/UCCAkMS2U32q9DrYthAR5rjw Discord: https://discord.com/invite/mjdBMN Instagram: https://www.instagram.com/gartnikflamestwitch/?hl=en Github: https://github.com/amthompson42010"
+        }
+    ]
+}
