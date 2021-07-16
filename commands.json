@@ -50,6 +50,10 @@
         {
             "commandName": "test",
             "response": "test"
+        },
+        {
+            "commandName": "test",
+            "response": "test"
         }
     ]
 }

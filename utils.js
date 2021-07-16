@@ -76,7 +76,11 @@ class Utils {
             "response": commandResponse
         })
 
-        fs.writeFile('./commands.json', JSON.stringify(commands), err => {
+        this.writeToJSONFile('./commands.json', JSON.stringify(commands));
+    }
+
+    writeToJSONFile(file, content) {
+        fs.writeFile(file, content, err => {
             if(err) {
                 console.error(err);
                 return;
