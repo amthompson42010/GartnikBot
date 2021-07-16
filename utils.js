@@ -73,6 +73,7 @@ class Utils {
     }
 
     commandExists(command_name) {
+        console.log("command_name: ", command_name);
         let isH = command_name => command_name === helloCommands.commandName;
         let isS = command_name => command_name === socialCommands.commandName;
         let isA = command_name => command_name === adminCommands.commandName;
